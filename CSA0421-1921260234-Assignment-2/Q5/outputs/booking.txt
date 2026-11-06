@@ -1,0 +1,6 @@
+8 agents x 40000 attempts, 14400 seats in total
+locking                 time (ms)     bookings/s  double-sold
+one global lock              51.2        6255376            0
+one lock per train           17.9       17921147            0
+one lock per coach            5.2       61361457            0
+no lock                       1.9      165889062            0

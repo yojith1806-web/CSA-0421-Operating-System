@@ -1,0 +1,3 @@
+4 worker processes: 64 results via pipe, time 20.9 ms (checksum 814bb9d0d49db70)
+8 worker processes: 64 results via pipe, time 13.2 ms (checksum 814bb9d0d49db70)
+16 worker processes: 64 results via pipe, time 11.6 ms (checksum 814bb9d0d49db70)

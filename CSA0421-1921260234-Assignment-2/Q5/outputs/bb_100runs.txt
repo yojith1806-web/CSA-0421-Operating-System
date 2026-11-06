@@ -1,0 +1,2 @@
+## 100 runs of bb: distinct outputs (count  line)
+ 100 items consumed: 20, sum = 210 (expected 210)

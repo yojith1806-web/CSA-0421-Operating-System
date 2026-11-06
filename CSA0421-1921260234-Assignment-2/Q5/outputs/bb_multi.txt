@@ -1,0 +1,6 @@
+1 producer(s), 1 consumer(s), mutex ON : 20000 items, consumed exactly once 20000, missing 0, duplicates 0 -> CORRECT
+4 producer(s), 4 consumer(s), mutex ON : 80000 items, consumed exactly once 80000, missing 0, duplicates 0 -> CORRECT
+4 producer(s), 4 consumer(s), mutex ON : 80000 items, consumed exactly once 80000, missing 0, duplicates 0 -> CORRECT
+4 producer(s), 4 consumer(s), mutex OFF: 80000 items, consumed exactly once 57790, missing 11109, duplicates 11109 -> WRONG
+4 producer(s), 4 consumer(s), mutex OFF: 80000 items, consumed exactly once 57418, missing 11294, duplicates 11294 -> WRONG
+4 producer(s), 4 consumer(s), mutex OFF: 80000 items, consumed exactly once 58412, missing 10797, duplicates 10797 -> WRONG

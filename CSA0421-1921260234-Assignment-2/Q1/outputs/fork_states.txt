@@ -1,0 +1,11 @@
+exam server (parent) pid 13521
+
+$ ps -o pid,ppid,stat,rss,vsz,time,comm -p 13521,13523,13524,13525
+  PID  PPID STAT    RSS      VSZ      TIME COMM
+13521 13520 S      1648 488781424   0:00.01 ./fork_states
+13523 13521 S      1168 488777712   0:00.00 ./fork_states
+13524 13521 R      1152 488777712   0:01.01 ./fork_states
+13525 13521 Z         0        0   0:00.00 <defunct>
+reaped session  pid 13523: exited, status 0
+reaped autosave pid 13524: killed by signal 15
+reaped proctor  pid 13525: exited, status 0

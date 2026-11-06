@@ -1,0 +1,15 @@
+online cores: 10   cameras: 64   frame 640x480
+method                      time(ms)  speed-up same result
+sequential (1 thread)           61.3      1.00      yes
+one thread per camera (64)       8.1      7.55      yes
+pool of 2 threads               23.0      2.66      yes
+pool of 4 threads               12.6      4.85      yes
+pool of 8 threads                8.8      6.97      yes
+pool of 16 threads               8.0      7.69      yes
+
+shared counter, 2 threads x 1000000 increments (expected 2000000):
+  run 1 unprotected : 1000000  (lost 1000000 updates)
+  run 2 unprotected : 1009992  (lost 990008 updates)
+  run 3 unprotected : 1014698  (lost 985302 updates)
+  mutex-protected   : 2000000
+  atomic_fetch_add  : 2000000

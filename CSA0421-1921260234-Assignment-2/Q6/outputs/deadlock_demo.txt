@@ -1,0 +1,18 @@
+== 1) jobs lock in opposite orders (all four conditions hold) ==
+  job A: holds GPU, requests LICENCE
+  job B: holds LICENCE, requests GPU
+  DETECTOR: no progress for 2 s - A waits for LICENCE held by B,
+            B waits for GPU held by A -> cycle -> DEADLOCK. Aborting job B.
+  job B: ABORTED by recovery, released LICENCE (its 0.1 s of work is lost)
+  job A: holds GPU + LICENCE -> running simulation
+  job A: finished
+  total time 2.07 s
+
+== 2) prevention: every job locks GPU before LICENCE (no circular wait) ==
+  job A: holds GPU, requests LICENCE
+  job A: holds GPU + LICENCE -> running simulation
+  job A: finished
+  job B: holds GPU, requests LICENCE
+  job B: holds GPU + LICENCE -> rendering
+  job B: finished
+  total time 0.32 s

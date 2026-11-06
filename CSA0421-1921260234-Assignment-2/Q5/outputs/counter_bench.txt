@@ -1,0 +1,19 @@
+Part 1: 2000000 updates in total, short critical section (counter++)
+method              threads  ns per update   CPU/wall    correct
+mutex                     1            7.6       1.00        yes
+mutex                     4          114.7       3.92        yes
+mutex                    16           14.7       9.65        yes
+semaphore                 1            8.0       1.00        yes
+semaphore                 4           35.5       2.46        yes
+semaphore                16         2412.7       4.92        yes
+atomic_fetch_add          1            1.6       1.00        yes
+atomic_fetch_add          4            6.7       3.65        yes
+atomic_fetch_add         16           45.6       9.67        yes
+spin lock                 1            1.0       1.00        yes
+spin lock                 4           31.4       3.87        yes
+spin lock                16          606.9       9.83        yes
+
+Part 2: LONG critical section (20 us), 16 threads, 3200 updates
+method                wall (ms)  CPU time (ms)    CPU wasted (ms)
+mutex                      66.4           71.1                7.1
+spin lock                 104.3          914.8              850.8

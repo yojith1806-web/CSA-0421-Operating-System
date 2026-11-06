@@ -1,0 +1,7 @@
+2,000 sessions, each 0.2 ms CPU + 2 ms I/O wait
+design                              total(ms)   live tasks
+one process per student                   448         2000
+one thread per student                     47         2000
+fixed pool of 4 workers                  1345            4
+fixed pool of 16 workers                  333           16
+fixed pool of 64 workers                   86           64

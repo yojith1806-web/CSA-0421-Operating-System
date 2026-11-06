@@ -1,0 +1,69 @@
+=== Part 1: P1-P4 (arrival 0,1,2,3; burst 8,4,9,5; priority 2,1,4,3) ===
+
+FCFS
+Gantt: P1(0-8) P2(8-12) P3(12-21) P4(21-26)
+Job        WT  TAT   RT
+P1          0    8    0
+P2          7   11    7
+P3         10   19   10
+P4         18   23   18
+FCFS                   avg WT    8.75   avg TAT   15.25   avg RT    8.75
+
+SJF (non-preemptive)
+Gantt: P1(0-8) P2(8-12) P4(12-17) P3(17-26)
+Job        WT  TAT   RT
+P1          0    8    0
+P2          7   11    7
+P3         15   24   15
+P4          9   14    9
+SJF (non-preemptive)   avg WT    7.75   avg TAT   14.25   avg RT    7.75
+
+SRTF (preemptive SJF)
+Gantt: P1(0-1) P2(1-5) P4(5-10) P1(10-17) P3(17-26)
+Job        WT  TAT   RT
+P1          9   17    0
+P2          0    4    0
+P3         15   24   15
+P4          2    7    2
+SRTF (preemptive SJF)  avg WT    6.50   avg TAT   13.00   avg RT    4.25
+
+Priority (non-preempt)
+Gantt: P1(0-8) P2(8-12) P4(12-17) P3(17-26)
+Job        WT  TAT   RT
+P1          0    8    0
+P2          7   11    7
+P3         15   24   15
+P4          9   14    9
+Priority (non-preempt) avg WT    7.75   avg TAT   14.25   avg RT    7.75
+
+Round Robin q=3
+Gantt: P1(0-3) P2(3-6) P3(6-9) P4(9-12) P1(12-15) P2(15-16) P3(16-19) P4(19-21) P1(21-23) P3(23-26)
+Job        WT  TAT   RT
+P1         15   23    0
+P2         11   15    2
+P3         15   24    4
+P4         13   18    6
+Round Robin q=3        avg WT   13.50   avg TAT   20.00   avg RT    3.00
+
+MLFQ (2,4,FCFS)
+Gantt: P1(0-2) P2(2-4) P3(4-6) P4(6-8) P1(8-12) P2(12-14) P3(14-18) P4(18-21) P1(21-23) P3(23-26)
+Job        WT  TAT   RT
+P1         15   23    0
+P2          9   13    1
+P3         15   24    2
+P4         13   18    3
+MLFQ (2,4,FCFS)        avg WT   13.00   avg TAT   19.50   avg RT    1.50
+
+=== Part 2: video service (2 films of 1200 s, 8 thumbnails of 2 s) ===
+FCFS                   avg WT 1801.50   avg TAT 2043.10   avg RT 1801.50
+    FCFS               short jobs avg WT 2101.75   long jobs avg WT  600.50
+SJF                    avg WT 1082.70   avg TAT 1324.30   avg RT 1082.70
+    SJF                short jobs avg WT 1201.75   long jobs avg WT  606.50
+SRTF                   avg WT  125.10   avg TAT  366.70   avg RT  123.50
+    SRTF               short jobs avg WT    2.75   long jobs avg WT  614.50
+RR q=3                 avg WT  250.00   avg TAT  491.60   avg RT    7.80
+    RR q=3             short jobs avg WT    9.25   long jobs avg WT 1213.00
+RR q=20                avg WT  270.30   avg TAT  511.90   avg RT   31.50
+    RR q=20            short jobs avg WT   36.75   long jobs avg WT 1204.50
+MLFQ (2,4,FCFS)        avg WT  127.70   avg TAT  369.30   avg RT    4.50
+    MLFQ               short jobs avg WT    5.25   long jobs avg WT  617.50

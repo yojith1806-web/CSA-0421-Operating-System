@@ -1,0 +1,4 @@
+size          pipe (ms)   shm+sem (ms)   pipe/shm sums equal
+    1 MB           1.47           1.22      1.21x yes
+   10 MB           3.00           2.36      1.27x yes
+  100 MB          17.93           9.32      1.92x yes

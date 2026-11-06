@@ -1,0 +1,17 @@
+     n    m case        time (us)      need checks         safe
+    10    3 worst            0.27               75          yes
+    10    3 best             0.12               30          yes
+   100    3 worst           11.28             5250          yes
+   100    3 best             0.47              300          yes
+  1000    3 worst          777.60           502500          yes
+  1000    3 best             3.40             3000          yes
+  2000    3 worst         2686.00          2005000          yes
+  2000    3 best             6.33             6000          yes
+    10   10 worst            0.19              145          yes
+    10   10 best             0.13              100          yes
+   100   10 worst            7.48             5950          yes
+   100   10 best             0.73             1000          yes
+  1000   10 worst          579.00           509500          yes
+  1000   10 best             5.60            10000          yes
+  2000   10 worst         2182.67          2019000          yes
+  2000   10 best            12.33            20000          yes
