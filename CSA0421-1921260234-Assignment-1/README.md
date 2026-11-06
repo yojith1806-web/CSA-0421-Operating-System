@@ -3,8 +3,8 @@
 
 | | |
 |---|---|
-| **Name** | Saai Vardhan D |
-| **Register Number** | 192525205 |
+| **Name** | YojithP |
+| **Register Number** | 1921260234 |
 | **Course** | CSA04 – Operating Systems |
 | **Report** | [`REPORT.md`](REPORT.md) (also submitted as a Word document) |
 
