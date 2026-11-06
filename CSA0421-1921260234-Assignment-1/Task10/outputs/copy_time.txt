@@ -1,0 +1,7 @@
+## time for a 16 MB copy (real / user / sys seconds)
+buffer 1 bytes: 16777217 read() calls real 28.07 user 1.90 sys 25.70 
+buffer 64 bytes: 262145 read() calls real 0.42 user 0.02 sys 0.39 
+buffer 512 bytes: 32769 read() calls real 0.05 user 0.00 sys 0.05 
+buffer 4096 bytes: 4097 read() calls real 0.01 user 0.00 sys 0.00 
+buffer 65536 bytes: 257 read() calls real 0.00 user 0.00 sys 0.00 
+buffer 1048576 bytes: 17 read() calls real 0.00 user 0.00 sys 0.00 

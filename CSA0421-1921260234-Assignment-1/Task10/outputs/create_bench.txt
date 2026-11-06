@@ -1,0 +1,13 @@
+processes created=1000  time=322.6 ms (322.6 us each)  memory=n/a (no /proc on this OS)
+threads   created=1000  time=3.5 ms (3.5 us each)  memory=n/a (no /proc on this OS)
+processes created=1000  time=376.0 ms (376.0 us each)  memory=n/a (no /proc on this OS)
+threads   created=1000  time=3.5 ms (3.5 us each)  memory=n/a (no /proc on this OS)
+processes created=1000  time=379.6 ms (379.6 us each)  memory=n/a (no /proc on this OS)
+threads   created=1000  time=3.8 ms (3.8 us each)  memory=n/a (no /proc on this OS)
+## /usr/bin/time -l (max resident set of creator)
+processes created=1000  time=370.8 ms (370.8 us each)  memory=n/a (no /proc on this OS)
+        0.66 real         0.06 user         0.59 sys
+             1703936  maximum resident set size
+threads   created=1000  time=3.8 ms (3.8 us each)  memory=n/a (no /proc on this OS)
+        0.27 real         0.00 user         0.37 sys
+            18219008  maximum resident set size

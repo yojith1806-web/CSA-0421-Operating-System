@@ -1,0 +1,14 @@
+## original, stdout redirected to a file
+shell: running job 1
+42
+job 1 exit status 0
+shell: running job 2
+job 2 exit status 3
+## variant (2nd fflush removed, _exit->exit), stdout redirected to a file
+shell: running job 1
+42
+job 1 exit status 0
+shell: running job 2
+job 1 exit status 0
+shell: running job 2
+job 2 exit status 3

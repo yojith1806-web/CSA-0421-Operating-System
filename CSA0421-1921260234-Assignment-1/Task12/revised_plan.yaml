@@ -1,0 +1,23 @@
+# Task 12 – Revised plan after adding home monitoring + cloud records (decision: MODIFY)
+revised_plan:
+  retained:
+    - bedside monitors: hard RTOS, microkernel
+    - tablets, workstations, imaging server: unchanged
+  modified:
+    patient_records:
+      from: on-premise 3-node cluster
+      to: distributed system = cloud records service (multi-zone replication)
+          + on-premise read cache / fail-over replica in each hospital
+      reason: shared by 3 hospitals, must survive loss of one site or the WAN
+    partner_link:
+      from: point-to-point VPN
+      to: cloud API with mutual-TLS, OAuth2 scopes per hospital, audit log
+  added:
+    home_monitors:
+      os_type: embedded real-time OS (FreeRTOS / Zephyr) on a low-power MCU
+      alarm_decision: local, on the device (< 1 ms), never waits for the internet
+      connectivity: store-and-forward ring buffer (4 KB holds ~17 min at 1 reading/s)
+      protection: secure boot, signed OTA updates, TLS 1.3 with device certificate
+      power: tickless idle, interrupt-driven sensors, batch uploads
+    cloud_gateway:
+      services: device identity registry, message queue (MQTT), alarm escalation to on-call nurse

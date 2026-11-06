@@ -1,0 +1,15 @@
+== monolithic structure ==
+  alarm service: tick 1, vitals checked
+  alarm service: tick 2, vitals checked
+  alarm service: tick 3, vitals checked
+  KERNEL PANIC: signal 11 in driver - alarm service died with it
+== microkernel structure ==
+  alarm service: tick 1, vitals checked
+  alarm service: tick 2, vitals checked
+  alarm service: tick 3, vitals checked
+  supervisor: display driver crashed (signal 11) - restarting it, alarms unaffected
+  alarm service: tick 4, vitals checked
+  alarm service: tick 5, vitals checked
+  supervisor: display driver crashed (signal 11) - restarting it, alarms unaffected
+  alarm service: tick 6, vitals checked
+  finished all 6 ticks, driver restarted 2 time(s)

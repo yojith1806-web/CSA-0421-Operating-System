@@ -1,0 +1,10 @@
+ working set    ns per load
+        4 KB           2.04
+       16 KB           1.43
+       64 KB           1.04
+      256 KB           3.02
+        1 MB           4.39
+        4 MB           5.97
+       16 MB           9.46
+       64 MB          69.86
+      256 MB          90.11

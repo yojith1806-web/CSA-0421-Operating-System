@@ -1,0 +1,7 @@
+1 hour, 4 desaturation episodes, 3 internet outages (300 s, 30 s, 600 s)
+
+design            alarms   missed        alarm delay    readings lost
+cloud-decides          1        3             215 ms              930
+edge-decides           4        0     < 1 ms (local)                0
+
+edge ring buffer: 1024 slots x 4 B = 4096 B, peak use 600 slots, 930 readings forwarded after reconnect

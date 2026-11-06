@@ -1,0 +1,13 @@
+mysh> 
+42
+[pid 5097 exited with status 0]
+mysh> 
+/etc/hosts
+[pid 5098 exited with status 0]
+mysh> 
+[pid 5099 exited with status 1]
+mysh> 
+[pid 5100 exited with status 127]
+mysh> 
+[pid 5101 exited with status 1]
+mysh> 

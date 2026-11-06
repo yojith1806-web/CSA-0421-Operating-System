@@ -1,0 +1,3 @@
+monolithic: one system call (getppid)            :    154.6 ns
+microkernel: message round trip, any CPU          :   3075.0 ns  (20x)
+microkernel: message round trip, same CPU (pinned):   2863.0 ns  (19x)

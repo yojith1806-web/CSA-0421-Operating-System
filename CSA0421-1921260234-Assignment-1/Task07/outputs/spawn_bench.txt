@@ -1,0 +1,5 @@
+parent resident size: 64 MB, commands started: 1000
+method                  total(ms)  per start(us)
+fork()+exec()               505.5          505.5
+posix_spawn()                21.8           21.8
+pthread_create()             12.6           12.6   (cannot run a separate program)

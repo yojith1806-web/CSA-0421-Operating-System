@@ -1,0 +1,8 @@
+method                         avg delay  worst delay    CPU per trial
+interrupt (blocking read)           30us         44us          1.08 ms  
+busy polling (no sleep)              3us          6us         64.21 ms  
+poll every 0.1 ms                   75us        130us          1.43 ms  
+poll every 1 ms                    610us       1272us          1.29 ms  
+poll every 5 ms                   2729us       6266us          1.12 ms  
+poll every 20 ms                 11943us      24472us          1.08 ms  <-- misses 10 ms alarm deadline
+(each trial waits 50-100 ms for the abnormal reading)

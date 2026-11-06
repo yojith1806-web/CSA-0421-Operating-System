@@ -1,0 +1,17 @@
+file size: 8388608 bytes (8.0 MB)
+method             buffer       read()      write()   time(ms)         MB/s
+read/write              1      8388609      8388608    13526.0          0.6
+read/write             16       524289       524288      891.4          9.0
+read/write             64       131073       131072      211.0         37.9
+read/write            512        16385        16384       28.3        282.6
+read/write           1024         8193         8192       15.2        526.5
+read/write           4096         2049         2048        5.4       1475.2
+read/write           8192         1025         1024        3.6       2200.8
+read/write          16384          513          512        3.1       2614.4
+read/write          65536          129          128        2.5       3215.4
+read/write         131072           65           64        2.1       3761.2
+read/write        1048576            9            8        2.1       3815.0
+fread/fwrite            1      ~n/4096      ~n/4096      271.3         29.5   (8388608 fread calls)
+fread/fwrite           64      ~n/4096      ~n/4096       10.1        791.8   (131072 fread calls)
+fread/fwrite         4096      ~n/4096      ~n/4096        5.5       1442.2   (2048 fread calls)
+mmap+memcpy             -            0            0        2.3       3530.5

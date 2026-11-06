@@ -1,0 +1,3 @@
+macOS arm64 : syscall number in x16, arguments in x0,x1,x2, trap = svc #0x80
+ALARM: SpO2 below 90% on bed 17 (written with a raw trap)
+kernel returned 58 (bytes written)

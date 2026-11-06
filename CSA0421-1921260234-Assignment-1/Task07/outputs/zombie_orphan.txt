@@ -1,0 +1,10 @@
+== zombie: child 6026 has exited, parent 6024 has not waited ==
+  PID  PPID STAT COMM
+ 6026  6024 Z    <defunct>
+after waitpid():
+  PID  PPID STAT COMM
+
+== orphan ==
+orphan-to-be 6030: my parent is 6029
+parent 6029 exits without waiting for 6030
+orphan 6030: my parent is now 1 (adopted, will be reaped by it)

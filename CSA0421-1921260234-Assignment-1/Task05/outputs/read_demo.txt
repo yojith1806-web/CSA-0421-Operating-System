@@ -1,0 +1,7 @@
+PATIENT RECORD  (synthetic test data)
+ID: P-1042   Ward: 3B   Bed: 17
+Name: TEST PATIENT ALPHA
+Vitals 08:00  HR 72  BP 118/76  SpO2 98%  Temp 36.8C
+Vitals 12:00  HR 75  BP 120/78  SpO2 97%  Temp 36.9C
+Allergies: penicillin
+Notes: post-op day 2, stable, mobilising.

@@ -1,0 +1,4 @@
+records: 100000 x 256 bytes = 24.4 MB, look-ups: 1000 random
+cold: page cache dropped (SSD)              0.627 us per record
+warm: OS page cache (pread syscall)         0.245 us per record  (3x faster)
+app: in-memory table (no syscall)           0.004 us per record  (157x faster than cold)

@@ -1,0 +1,41 @@
+# Task 11 – Recommended operating-system plan for the smart hospital
+# (type + structure + services + protection + I/O for every environment)
+hospital_os_plan:
+  bedside_monitors:            # 500 units
+    os_type: hard real-time embedded OS
+    example: QNX Neutrino or FreeRTOS (safety-certified build, IEC 62304)
+    structure: microkernel (QNX) / minimal single-image RTOS (FreeRTOS)
+    scheduler: fixed-priority preemptive, alarm task highest priority, deadline 10 ms
+    services: [program execution, sensor I/O, error detection + watchdog, network send]
+    removed_services: [GUI windowing, multi-user accounts, general file system, accounting, shell]
+    protection: MPU regions per task, signed firmware, no user-loadable code
+    io_method: interrupt-driven sensor I/O, DMA for ECG waveform blocks
+  nurse_tablets:               # 120 units
+    os_type: handheld / mobile OS
+    example: Android Enterprise (managed) or iPadOS with MDM
+    structure: Linux monolithic+modular kernel with sandboxed apps (Android)
+    services: [touch UI, wifi, notifications, encrypted storage, app sandbox]
+    removed_services: [server daemons, compilers, printing spooler]
+    protection: per-app UID sandbox, full-disk encryption, MDM remote wipe
+    power: aggressive sleep states, push notifications instead of polling
+  doctor_workstations:         # 80 units
+    os_type: desktop OS
+    example: Windows 11 Enterprise or Ubuntu Desktop LTS
+    structure: hybrid (Windows NT) / monolithic + modules (Linux)
+    services: [full GUI, file system, network, printing, imaging viewer]
+    protection: domain logins, role-based access, disk encryption
+  patient_records_database:
+    os_type: clustered server OS with fail-over
+    example: RHEL / Ubuntu Server, 3-node cluster (Pacemaker + PostgreSQL streaming replication)
+    structure: monolithic + loadable modules (Linux), live kernel patching
+    services: [file system with journaling, networking, error detection, accounting/audit, protection]
+    availability: rolling updates one node at a time, fail-over < 30 s
+    io_method: DMA (NVMe SSD), page cache, buffered I/O with 64 KB blocks for backup
+  imaging_server:
+    os_type: multiprocessor (SMP) server OS
+    example: Linux SMP, many cores + GPU
+    structure: monolithic + modules
+    io_method: DMA from MRI scanner, large pages, parallel threads
+  partner_link:
+    os_type: distributed system
+    design: HL7 FHIR over TLS VPN, replicated records with access logging

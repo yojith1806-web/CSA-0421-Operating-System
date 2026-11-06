@@ -1,0 +1,4 @@
+## idle system
+policy=SCHED_OTHER wakeups=5000  min=13.0us avg=214.4us p99=244.0us p99.9=3156.0us max=7155.0us  >1ms=8 >10ms=0
+## with CPU hogs (2 per core)
+policy=SCHED_OTHER wakeups=5000  min=6.0us avg=206.1us p99=256.0us p99.9=1793.0us max=2246.0us  >1ms=18 >10ms=0
