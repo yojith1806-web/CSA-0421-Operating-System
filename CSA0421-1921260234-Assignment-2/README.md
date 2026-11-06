@@ -1,7 +1,7 @@
 # CSA04 - Operating Systems Assignment 2
 
-**Name:** Saai Vardhan D  
-**Registration Number:** 192525205
+**Name:** Yojith P  
+**Registration Number:** 1921260234
 
 ## Folder Structure
 
