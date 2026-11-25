@@ -2,9 +2,9 @@
 
 | Field | Value |
 |---|---|
-| Name | **<YOUR NAME>** |
-| Register number | **<REGISTER NUMBER>** |
-| Repository | `CSA04-<RegisterNumber>-Assignment3` (rename this folder/repo before pushing) |
+| Name | **< Yojith P >** |
+| Register number | **1921260234** |
+| Repository | https://github.com/yojith1806-web/CSA-0421-Operating-System/tree/main |
 | Compiler | gcc 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04.1) |
 | OS | Ubuntu 24.04.5 LTS, Linux kernel 6.18 (virtual machine, 4 GB RAM, no swap) |
 | Compile command | `gcc -std=c11 -Wall -Wextra` (plus `-pthread` not needed; `-ldl` for Q1 dlopen; `-O1/-O2` for timing programs, stated in each `run.sh`) |
