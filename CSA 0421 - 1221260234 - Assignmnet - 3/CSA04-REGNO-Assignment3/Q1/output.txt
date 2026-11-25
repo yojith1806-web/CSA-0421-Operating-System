@@ -1,0 +1,103 @@
++ gcc -std=c11 -Wall -Wextra -fPIC -shared -o libenc.so libenc.c
++ gcc -std=c11 -Wall -Wextra -fPIC -shared -o libenc_v2.so libenc_v2.c
++ gcc -std=c11 -Wall -Wextra -c libenc.c -o libenc_static.o
++ ar rcs libenc.a libenc_static.o
++ gcc -std=c11 -Wall -Wextra -D_GNU_SOURCE -o bank_dynamic bank.c -L. -lenc '-Wl,-rpath,$ORIGIN'
++ gcc -std=c11 -Wall -Wextra -D_GNU_SOURCE -static -o bank_static bank.c libenc.a
++ gcc -std=c11 -Wall -Wextra -o bank_dl bank_dl.c -ldl
++ set +x
+=== 1. Sizes (bytes) ===
+16448 bank_dynamic
+790072 bank_static
+15224 libenc.so
+=== 2. ldd ===
+-- dynamic:
+	linux-vdso.so.1 (0x00007f758797e000)
+	libenc.so => /home/claude/CSA04-REGNO-Assignment3/Q1/./libenc.so (0x00007f758796c000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f7587600000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007f7587980000)
+-- static:
+	not a dynamic executable
+=== 3. Run both ===
+library: libenc v1.0
+first cipher byte: 0x1b
+library: libenc v1.0
+first cipher byte: 0x1b
+=== 4. Load addresses (/proc/self/maps) of dynamic build ===
+library: libenc v1.0
+first cipher byte: 0x1b
+55dbab1b3000-55dbab1b4000 r--p 00000000 fe:00 434233                     /home/claude/CSA04-REGNO-Assignment3/Q1/bank_dynamic
+55dbab1b4000-55dbab1b5000 r-xp 00001000 fe:00 434233                     /home/claude/CSA04-REGNO-Assignment3/Q1/bank_dynamic
+55dbab1b5000-55dbab1b6000 r--p 00002000 fe:00 434233                     /home/claude/CSA04-REGNO-Assignment3/Q1/bank_dynamic
+55dbab1b6000-55dbab1b7000 r--p 00002000 fe:00 434233                     /home/claude/CSA04-REGNO-Assignment3/Q1/bank_dynamic
+55dbab1b7000-55dbab1b8000 rw-p 00003000 fe:00 434233                     /home/claude/CSA04-REGNO-Assignment3/Q1/bank_dynamic
+55dbb3b98000-55dbb3bb9000 rw-p 00000000 00:00 0                          [heap]
+7fbc82000000-7fbc82028000 r--p 00000000 fe:00 115719                     /usr/lib/x86_64-linux-gnu/libc.so.6
+7fbc82028000-7fbc821b1000 r-xp 00028000 fe:00 115719                     /usr/lib/x86_64-linux-gnu/libc.so.6
+7fbc821b1000-7fbc82200000 r--p 001b1000 fe:00 115719                     /usr/lib/x86_64-linux-gnu/libc.so.6
+7fbc82200000-7fbc82204000 r--p 001ff000 fe:00 115719                     /usr/lib/x86_64-linux-gnu/libc.so.6
+7fbc82204000-7fbc82206000 rw-p 00203000 fe:00 115719                     /usr/lib/x86_64-linux-gnu/libc.so.6
+7fbc82206000-7fbc82213000 rw-p 00000000 00:00 0 
+7fbc8233f000-7fbc82342000 rw-p 00000000 00:00 0 
+7fbc8234f000-7fbc82350000 r--p 00000000 fe:00 434229                     /home/claude/CSA04-REGNO-Assignment3/Q1/libenc.so
+=== 5. dlopen/dlsym demo ===
+no encryption needed - library NOT loaded
+libenc mapped in address space? no
+dlopen OK: libenc v1.0, first cipher byte 0x1b
+7f2218241000-7f2218242000 r--p 00000000 fe:00 434229                     /home/claude/CSA04-REGNO-Assignment3/Q1/libenc.so
+7f2218242000-7f2218243000 r-xp 00001000 fe:00 434229                     /home/claude/CSA04-REGNO-Assignment3/Q1/libenc.so
+7f2218243000-7f2218244000 r--p 00002000 fe:00 434229                     /home/claude/CSA04-REGNO-Assignment3/Q1/libenc.so
+7f2218244000-7f2218245000 r--p 00002000 fe:00 434229                     /home/claude/CSA04-REGNO-Assignment3/Q1/libenc.so
+7f2218245000-7f2218246000 rw-p 00003000 fe:00 434229                     /home/claude/CSA04-REGNO-Assignment3/Q1/libenc.so
+=== 6. Start-up time: 2000 runs each ===
+./bank_static: .73002 ms per run
+./bank_dynamic: .88422 ms per run
+./bank_dl: .86850 ms per run
+=== 7. Memory (max RSS KB) ===
+[runstat] ./bank_static: maxRSS=592 KB, minor faults=41, major faults=0, wall=0.78 ms
+[runstat] ./bank_dynamic: maxRSS=1616 KB, minor faults=83, major faults=0, wall=0.76 ms
+=== 8. Replace library WITHOUT recompiling ===
+before:
+library: libenc v1.0
+first cipher byte: 0x1b
+after swapping libenc.so with the fixed v2:
+library: libenc v2.0 (security fix)
+first cipher byte: 0x2a
+static build is unchanged (still old code):
+library: libenc v1.0
+first cipher byte: 0x1b
+=== 9. Two copies: which pages are shared? (Pss vs Rss from /proc/PID/smaps) ===
+PID 24512
+  /home/claude/CSA04-REGNO-Assignment3/Q1/bank_dynamic Private_Dirty: 8 kB
+  /home/claude/CSA04-REGNO-Assignment3/Q1/bank_dynamic Pss: 14 kB
+  /home/claude/CSA04-REGNO-Assignment3/Q1/bank_dynamic Rss: 20 kB
+  /home/claude/CSA04-REGNO-Assignment3/Q1/bank_dynamic Shared_Clean: 0 kB
+  /home/claude/CSA04-REGNO-Assignment3/Q1/libenc.so Private_Dirty: 8 kB
+  /home/claude/CSA04-REGNO-Assignment3/Q1/libenc.so Pss: 14 kB
+  /home/claude/CSA04-REGNO-Assignment3/Q1/libenc.so Rss: 20 kB
+  /home/claude/CSA04-REGNO-Assignment3/Q1/libenc.so Shared_Clean: 12 kB
+  /usr/lib/x86_64-linux-gnu/libc.so.6 Private_Dirty: 24 kB
+  /usr/lib/x86_64-linux-gnu/libc.so.6 Pss: 262 kB
+  /usr/lib/x86_64-linux-gnu/libc.so.6 Rss: 1508 kB
+  /usr/lib/x86_64-linux-gnu/libc.so.6 Shared_Clean: 1484 kB
+PID 24513
+  /home/claude/CSA04-REGNO-Assignment3/Q1/bank_dynamic Private_Dirty: 8 kB
+  /home/claude/CSA04-REGNO-Assignment3/Q1/bank_dynamic Pss: 14 kB
+  /home/claude/CSA04-REGNO-Assignment3/Q1/bank_dynamic Rss: 20 kB
+  /home/claude/CSA04-REGNO-Assignment3/Q1/bank_dynamic Shared_Clean: 0 kB
+  /home/claude/CSA04-REGNO-Assignment3/Q1/libenc.so Private_Dirty: 8 kB
+  /home/claude/CSA04-REGNO-Assignment3/Q1/libenc.so Pss: 14 kB
+  /home/claude/CSA04-REGNO-Assignment3/Q1/libenc.so Rss: 20 kB
+  /home/claude/CSA04-REGNO-Assignment3/Q1/libenc.so Shared_Clean: 12 kB
+  /usr/lib/x86_64-linux-gnu/libc.so.6 Private_Dirty: 24 kB
+  /usr/lib/x86_64-linux-gnu/libc.so.6 Pss: 300 kB
+  /usr/lib/x86_64-linux-gnu/libc.so.6 Rss: 1508 kB
+  /usr/lib/x86_64-linux-gnu/libc.so.6 Shared_Clean: 1484 kB
+=== 10. Missing library ===
+./bank_dynamic: error while loading shared libraries: libenc.so: cannot open shared object file: No such file or directory
+exit code: 127
+FALLBACK: cannot load library: ./libenc.so: cannot open shared object file: No such file or directory
+exit code (dlopen version handles it): 2
+=== 11. PIE / PIC check ===
+bank_dynamic: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x
+  Type:                              DYN (Position-Independent Executable file)

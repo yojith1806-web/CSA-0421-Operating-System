@@ -1,0 +1,75 @@
+=== Complete the code output ===
+3 frames: FIFO 15, LRU 12, Optimal 9
+4 frames: FIFO 10, LRU 8, Optimal 8
+Belady string, FIFO: 3 frames 9 faults, 4 frames 10 faults
+
+Belady's anomaly, string 1 2 3 4 1 2 5 1 2 3 4 5 (FIFO vs LRU, 1..7 frames):
+frames:   1  2  3  4  5  6  7
+FIFO  :  12 12  9 10  5  5  5
+LRU   :  12 12 10  8  5  5  5
+
+Running time for 100000 references (locality string, 4 frames, mean of 20 runs):
+FIFO   : 0.633 ms
+LRU    : 0.789 ms
+Optimal: 0.879 ms  (uses precomputed next-use; offline, needs the future)
+Clock  : 1.010 ms
+LRU, 10 frames: 1.079 ms (cost grows with frames: O(N*F))
+Clock, 10 frames: 1.123 ms
+=== sim.c: results.csv written ===
+kind,frames,FIFO,LRU,OPT,CLOCK
+locality,3,60493,59743,39659,60305
+locality,4,48773,47181,27917,48270
+locality,5,38657,35137,19482,37288
+locality,6,30768,24288,13532,27903
+locality,7,25357,16951,9931,21367
+locality,8,21839,13030,8878,16973
+locality,9,19238,11023,8191,14086
+locality,10,17366,10004,7641,12207
+random,3,95362,95351,81562,95357
+random,4,93736,93740,76286,93736
+random,5,92182,92186,71888,92179
+random,6,90641,90619,68039,90617
+random,7,89100,89053,64598,89073
+random,8,87476,87455,61482,87489
+random,9,85878,85884,58627,85858
+random,10,84319,84269,55971,84334
+
+Belady's anomaly, string 1 2 3 4 1 2 5 1 2 3 4 5 (FIFO vs LRU, 1..7 frames):
+frames:   1  2  3  4  5  6  7
+FIFO  :  12 12  9 10  5  5  5
+LRU   :  12 12 10  8  5  5  5
+
+Running time for 100000 references (locality string, 4 frames, mean of 20 runs):
+FIFO   : 0.596 ms
+LRU    : 0.778 ms
+Optimal: 0.878 ms  (uses precomputed next-use; offline, needs the future)
+Clock  : 1.017 ms
+LRU, 10 frames: 1.072 ms (cost grows with frames: O(N*F))
+Clock, 10 frames: 1.129 ms
+Fault rate (%) with 6 frames:
+  locality {'FIFO': 30.77, 'LRU': 24.29, 'OPT': 13.53, 'CLOCK': 27.9}
+  random {'FIFO': 90.64, 'LRU': 90.62, 'OPT': 68.04, 'CLOCK': 90.62}
+
+Hand trace, LRU, 3 frames (reference string from the question):
+ref  frames    fault
+  7  [7]        F
+  0  [7, 0]     F
+  1  [7, 0, 1]  F
+  2  [2, 0, 1]  F
+  0  [2, 0, 1]  -
+  3  [2, 0, 3]  F
+  0  [2, 0, 3]  -
+  4  [4, 0, 3]  F
+  2  [4, 0, 2]  F
+  3  [4, 3, 2]  F
+  0  [0, 3, 2]  F
+  3  [0, 3, 2]  -
+  2  [0, 3, 2]  -
+  1  [1, 3, 2]  F
+  2  [1, 3, 2]  -
+  0  [1, 0, 2]  F
+  1  [1, 0, 2]  -
+  7  [1, 0, 7]  F
+  0  [1, 0, 7]  -
+  1  [1, 0, 7]  -
+total faults = 12

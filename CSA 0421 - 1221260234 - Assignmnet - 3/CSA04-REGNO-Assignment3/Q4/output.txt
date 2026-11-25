@@ -1,0 +1,73 @@
+touch.c: In function 'main':
+touch.c:20:5: warning: this 'for' clause does not guard... [-Wmisleading-indentation]
+   20 |     for(size_t i=0;i<pages;i++) order[i]=i; if(mode) shuffle(order,pages);
+      |     ^~~
+touch.c:20:45: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the 'for'
+   20 |     for(size_t i=0;i<pages;i++) order[i]=i; if(mode) shuffle(order,pages);
+      |                                             ^~
+touch.c:27:64: warning: ignoring return value of 'ftruncate' declared with attribute 'warn_unused_result' [-Wunused-result]
+   27 |   int fd=open("/tmp/q4_file.bin",O_RDWR|O_CREAT|O_TRUNC,0600); ftruncate(fd,n);
+      |                                                                ^~~~~~~~~~~~~~~
+limited.c: In function 'main':
+limited.c:15:25: warning: unused parameter 'argv' [-Wunused-parameter]
+   15 | int main(int argc,char**argv){
+      |                   ~~~~~~^~~~
+limited.c:17:63: warning: ignoring return value of 'ftruncate' declared with attribute 'warn_unused_result' [-Wunused-result]
+   17 |   int fd=open("/tmp/q4_lim.bin",O_RDWR|O_CREAT|O_TRUNC,0600); ftruncate(fd,pages*PS);
+      |                                                               ^~~~~~~~~~~~~~~~~~~~~~
+cow.c: In function 'mem':
+cow.c:11:128: warning: variable 'sc' set but not used [-Wunused-but-set-variable]
+   11 | static void mem(const char *tag,char *buf){ FILE*f=fopen("/proc/self/smaps","r"); char l[256]; int in=0; long rss=0,pss=0,pd=0,sc=0,sd=0,v;
+      |                                                                                                                                ^~
+=== Sequential vs random touching ===
+128 MB, 32768 pages
+ANON sequential first pass:  32770 faults (42.63 ms, 1.30 us/fault)   second pass: 0 faults
+ANON random     first pass:  32768 faults (38.32 ms, 1.17 us/fault)   second pass: 0 faults
+FILE sequential touching 100% of pages:   1028 faults (1.79 ms)
+FILE random     touching 100% of pages:   1028 faults (1.58 ms)
+FILE sequential touching   5% of pages:     55 faults (0.06 ms)
+FILE random     touching   5% of pages:    841 faults (0.86 ms)
+(file-backed pages are in the page cache; the kernel maps 16 neighbouring cached pages per fault = 'fault-around',
+ so sequential access needs ~1/16 of the faults, while sparse random access gets almost no benefit)
+
+=== Run time as available frames shrink below what is needed (software limit) ===
+RANDOM (uniform) access, 16384 pages (64 MB) of file, 300000 references
+  frames  %needed     faults   time(ms)     slowdown
+   16384     100%      16384       61.0         1.0x
+   12288      75%      81876      718.4        11.8x
+    8192      50%     152361     1225.6        20.1x
+    4096      25%     225333     1521.6        24.9x
+    1638      10%     270169     1863.8        30.5x
+
+LOCALITY (90/10) access, 16384 pages (64 MB) of file, 300000 references
+  frames  %needed     faults   time(ms)     slowdown
+   16384     100%      14045       70.6         1.0x
+   12288      75%      16186       60.1         0.9x
+    8192      50%      21675      163.5         2.3x
+    4096      25%      36969      400.9         5.7x
+    1638      10%      99539      918.4        13.0x
+
+=== Copy-on-write with fork() ===
+Parent allocates and touches 200 MB
+  [parent before fork    ] buffer Rss= 204804 kB  Pss= 204804 kB  Shared_Dirty=      0 kB  Private_Dirty= 204804 kB
+  [child just after fork ] buffer Rss= 204804 kB  Pss= 102402 kB  Shared_Dirty= 204804 kB  Private_Dirty=      0 kB
+  child wrote to 50% of pages: 25601 COW faults in 46.4 ms
+  [child after writing   ] buffer Rss= 204804 kB  Pss= 153602 kB  Shared_Dirty= 102404 kB  Private_Dirty= 102400 kB
+fork() of a process with 200 MB took 1.442 ms (parent side)
+an eager full copy (memcpy of 200 MB, incl. page faults of the new buffer) takes 95.0 ms (check byte 2)
+
+=== Effective access time EAT = (1-p)*100 ns + p*8,000,000 ns ===
+p =      1 in 1,000: EAT =    8099.90 ns ->  81.00x slower than 100 ns
+p =    1 in 100,000: EAT =     180.00 ns ->   1.80x slower than 100 ns
+p =  1 in 1,000,000: EAT =     108.00 ns ->   1.08x slower than 100 ns
+
+Max fault rate for 10% slow-down: 110 = 100 + p*(8,000,000-100) -> p = 1.250e-06 = 1 fault per 799,990 accesses
+
+=== Frame allocation (62 free frames, process A = 10 pages, B = 127 pages) ===
+Equal allocation: 31 / 31.  Proportional: A = 10/137*62 = 4.5 -> 4,  B = 127/137*62 = 57.5 -> 57
+
+=== Page faults vs frames, reference string 7 0 1 2 0 3 0 4 2 3 0 3 2 1 2 0 1 7 0 1 ===
+frames: [1, 2, 3, 4, 5, 6, 7]
+FIFO  : [20, 15, 15, 10, 9, 6, 6]
+LRU   : [20, 17, 12, 8, 7, 6, 6]
+OPT   : [20, 13, 9, 8, 7, 6, 6]

@@ -1,0 +1,16 @@
+=== mlock experiment (1 MB control buffer, 3000 iterations) ===
+RLIMIT_MEMLOCK soft limit = 8192 kB (root/CAP_IPC_LOCK bypasses it)
+unlocked  : eviction attempts refused=   0 | faults=  36007 minor+ 3000 major | loop time us: min   218.1  mean    299.5  p99    512.6  MAX    3583.4
+mlock()ed : eviction attempts refused=3000 | faults=      0 minor+    0 major | loop time us: min     0.2  mean      0.3  p99      0.4  MAX      26.2
+unlocked  : eviction attempts refused=   0 | faults=  36007 minor+ 3000 major | loop time us: min   238.8  mean    298.0  p99    423.7  MAX    3004.0
+mlock()ed : eviction attempts refused=3000 | faults=      0 minor+    0 major | loop time us: min     0.2  mean      0.3  p99      0.4  MAX      24.8
+
+=== Page-replacement simulation of the three tasks ===
+scenario                                       pool(MB) RT faults  ML faults  ML rate LOG faults 4th faults
+A: 3 tasks, RT locked                              1684         0       1500     1.0%         60          0
+B: 3 tasks, RT NOT locked                          1748        64       1500     1.0%         60          0
+C: 4 tasks (+500 MB), RT locked                    1684         0     102047    68.0%       2704      17624
+D: 4 tasks (+500 MB), RT NOT locked                1748      3840     101283    67.5%       2647      17299
+
+Needs: OS 300 + RT 64 + ML 1500 + LOG 60 = 1924 MB of 2048 MB (124 MB headroom). Adding 500 MB -> 2424 MB > 2048 MB (376 MB over-committed).
+Per-run cost of the ML faults if flash read = 100 us per 4 KB page is shown in the report. RT runs every 50th tick, so under pressure its idle pages age out of LRU unless locked.

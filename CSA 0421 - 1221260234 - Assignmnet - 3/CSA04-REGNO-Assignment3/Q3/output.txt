@@ -1,0 +1,50 @@
+=== 8 (segment,offset) translations ===
+(0,  53) -> code: base 1400 + 53 = physical 1453
+(0, 999) -> code: base 1400 + 999 = physical 2399
+(1, 399) -> data: base 6300 + 399 = physical 6699
+(1, 400) -> TRAP: offset 400 >= limit 400 of data (addressing error)
+(2,1099) -> heap: base 4300 + 1099 = physical 5399
+(3, 800) -> TRAP: offset 800 >= limit 800 of stack (addressing error)
+(4,   0) -> lib: base 4700 + 0 = physical 4700
+(9,  10) -> TRAP: invalid segment number
+=== Trigger a segmentation fault (NULL dereference) ===
+dereferencing NULL...
+run.sh: line 5: 24645 Segmentation fault      ./segfault
+exit status = 139 (128+11 = SIGSEGV)
+=== Write to read-only code page ===
+writing to read-only code segment...
+run.sh: line 6: 24646 Segmentation fault      ./segfault w
+exit status = 139
+=== Segments of a running program (non-PIE build so code address is fixed) ===
+code  (main)   : 0x4011f6
+rodata        : 0x402008
+data  (g_init) : 0x404048
+bss   (g_bss)  : 0x40405c
+heap  (malloc) : 0x71bd2a0
+stack (local)  : 0x7ffe0429bf4c
+
+00400000-00401000 r--p 00000000 fe:00 434345                             /home/claude/CSA04-REGNO-Assignment3/Q3/layout
+00401000-00402000 r-xp 00001000 fe:00 434345                             /home/claude/CSA04-REGNO-Assignment3/Q3/layout
+00402000-00403000 r--p 00002000 fe:00 434345                             /home/claude/CSA04-REGNO-Assignment3/Q3/layout
+00403000-00404000 r--p 00002000 fe:00 434345                             /home/claude/CSA04-REGNO-Assignment3/Q3/layout
+00404000-00405000 rw-p 00003000 fe:00 434345                             /home/claude/CSA04-REGNO-Assignment3/Q3/layout
+071bd000-071de000 rw-p 00000000 00:00 0                                  [heap]
+7f65d2200000-7f65d2228000 r--p 00000000 fe:00 115719                     /usr/lib/x86_64-linux-gnu/libc.so.6
+7f65d2228000-7f65d23b1000 r-xp 00028000 fe:00 115719                     /usr/lib/x86_64-linux-gnu/libc.so.6
+7f65d23b1000-7f65d2400000 r--p 001b1000 fe:00 115719                     /usr/lib/x86_64-linux-gnu/libc.so.6
+7f65d2400000-7f65d2404000 r--p 001ff000 fe:00 115719                     /usr/lib/x86_64-linux-gnu/libc.so.6
+7f65d2404000-7f65d2406000 rw-p 00203000 fe:00 115719                     /usr/lib/x86_64-linux-gnu/libc.so.6
+7ffe0427c000-7ffe0429d000 rw-p 00000000 00:00 0                          [stack]
+=== Fragmentation after loading and removing 20 random segments (first-fit, 1400 KB memory) ===
+loaded 20 segments, sizes: [40, 85, 79, 26, 57, 87, 70, 90, 84, 18, 87, 11, 70, 43, 80, 39, 34, 70, 79, 80]
+used = 1229 KB, free = 171 KB, holes=[171]
+after removing 10 random segments: 7 holes [40, 57, 244, 124, 39, 70, 171]
+total free = 745 KB, largest hole = 244 KB -> external fragmentation = 67.2% (free memory unusable for a request > 244 KB)
+
+=== Table size comparison: process with 4 segments (code 300 KB, data 200 KB, heap 1 MB, stack 100 KB), 4 KB pages, 4-byte entries ===
+Pure segmentation : 4 entries x 8 B (base+limit) = 32 B
+Pure paging       : 406 entries x 4 B = 1624 B  (one entry per 4 KB page of 1624 KB)
+Segmented paging  : 4 segment entries (32 B) + 406 page-table entries x 4 B = 1656 B; internal waste only in last page of each segment (<= 4 x 4 KB)
+
+=== Fragmentation comparison ===
+Pure paging: internal only (<= 1 page/process). Pure segmentation: external only (holes). Segmented paging: internal only (last page of each segment).

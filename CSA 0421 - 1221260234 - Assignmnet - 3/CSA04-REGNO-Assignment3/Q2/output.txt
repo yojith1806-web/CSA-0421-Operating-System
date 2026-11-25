@@ -1,0 +1,53 @@
+=== Complete the code: PAGE_SIZE 1024 ===
+0 -> page 0 offset 0 : physical 5120
+1500 -> page 1 offset 476 : physical 2524
+3100 -> page 3 offset 28 : physical 7196
+6200 -> page 6 offset 56 : physical 3128
+9000 -> page 8 offset 808 : invalid address
+2049 -> page 2 offset 1 : page fault
+=== PAGE_SIZE 2048 (program) ===
+0 -> page 0 offset 0 : physical 10240
+1500 -> page 0 offset 1500 : physical 11740
+3100 -> page 1 offset 1052 : physical 5148
+6200 -> page 3 offset 56 : physical 14392
+9000 -> page 4 offset 808 : physical 808
+2049 -> page 1 offset 1 : physical 4097
+=== PAGE_SIZE 2048 hand calculation (page table unchanged: p0->5, p1->2, p2->-1, p3->7, p4->0, p5..7 -> -1/3/-1)
+0    : p=0 d=0    frame5 -> 5*2048+0    = 10240
+1500 : p=0 d=1500 frame5 -> 10240+1500 = 11740
+3100 : p=1 d=1052 frame2 -> 4096+1052  = 5148
+6200 : p=3 d=56   frame7 -> 14336+56   = 14392
+9000 : p=4 d=808  frame0 -> 0+808      = 808   (valid now; it was invalid with 1 KB pages)
+2049 : p=1 d=1    frame2 -> 4096+1    = 4097   (was a page fault with 1 KB pages)
+=== Start/end of page and beyond last page ===
+     0 (0x00000): page 0 offset    0 -> frame 9 -> physical 36864
+  4095 (0x00fff): page 0 offset 4095 -> frame 9 -> physical 40959
+  4096 (0x01000): page 1 offset    0 -> frame 4 -> physical 16384
+  8191 (0x01fff): page 1 offset 4095 -> frame 4 -> physical 20479
+  8192 (0x02000): page 2 offset    0 -> frame 6 -> physical 24576
+ 12287 (0x02fff): page 2 offset 4095 -> frame 6 -> physical 28671
+ 12288 (0x03000): page 3 offset    0 -> TRAP: invalid address (beyond last page)
+ 20000 (0x04e20): page 4 offset 3616 -> TRAP: invalid address (beyond last page)
+=== getconf PAGESIZE ===
+4096
+=== Page faults of a 64 MB program (expect ~16384 + startup) ===
+[runstat] ./workload: maxRSS=66832 KB, minor faults=16453, major faults=0, wall=29.06 ms
+=== Page-table size ===
+32-bit, 4 KB pages: 1,048,576 entries x 4 B = 4 MB  (0.00 GB)
+48-bit, 4 KB pages: 68,719,476,736 entries x 8 B = 524,288 MB  (512.00 GB)
+
+=== Effective access time (memory=100 ns, TLB lookup=10 ns) ===
+No TLB: 2 x 100 = 200 ns
+TLB hit ratio 80%: 0.80x110 + 0.20x210 = 130.0 ns  (slow-down vs ideal 100 ns: 30%)
+TLB hit ratio 95%: 0.95x110 + 0.05x210 = 115.0 ns  (slow-down vs ideal 100 ns: 15%)
+TLB hit ratio 99%: 0.99x110 + 0.01x210 = 111.0 ns  (slow-down vs ideal 100 ns: 11%)
+
+=== Internal fragmentation of 100 random processes (seed 42, sizes 1 KB .. 2 GB, log-uniform) ===
+page 1 KB: pages=15,435,486  wasted=      0.05 MB  avg/process=       0.5 KB  (theory ~ page/2 = 0.5 KB)  page-table entries=15,435,486
+page 4 KB: pages=3,858,914  wasted=      0.21 MB  avg/process=       2.2 KB  (theory ~ page/2 = 2.0 KB)  page-table entries=3,858,914
+page 2 MB: pages=    7,611  wasted=    148.33 MB  avg/process=    1518.9 KB  (theory ~ page/2 = 1024.0 KB)  page-table entries=7,611
+
+Small-process view (100 processes of 10 KB..5 MB, seed 7):
+page 1 KB: wasted=    0.05 MB of 263 MB used (0.0%), entries=269,462
+page 4 KB: wasted=    0.21 MB of 263 MB used (0.1%), entries=67,406
+page 2 MB: wasted=  110.90 MB of 263 MB used (42.2%), entries=187
